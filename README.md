@@ -55,3 +55,54 @@
     "status": "shipped",
     "tracking_number": "PL123456"
   }
+
+
+
+
+----------
+
+
+
+
+🤖 AI Customer Support Agent
+An autonomous customer support agent for an online store, built using RAG (Retrieval-Augmented Generation) and API tools.
+
+📌 Project Description
+The project is designed to automate the handling of frequent customer inquiries for an online store. The agent is capable of:
+- 📖 Searching for answers in the company's knowledge base (RAG) regarding delivery, returns, payment, warranty, and contact details.
+- 📦 Checking the current order status by its identifier (order_id) via an emulated API/CRM.
+- 🔒 Operating within strictly defined permissions (read-only access, no modifying orders or creating returns).
+- 🛡️ Handling errors and protecting customer sensitive data.
+
+🏗️ Architecture and Components
+The project follows this interaction workflow:
+1. Chat Trigger: Accepts incoming messages from the user.
+2. AI Agent: Analyzes the query and selects the necessary tool (RAG or API).
+3. Tools:
+  - Search Knowledge Base: Searches for information in company documents from the `knowledge_base/` folder.
+  - Get Order Status: Queries the order status via CRM/API.
+4. Verified Context & Final Response: Cross-references the retrieved data with policies and generates a final safe response to the user.
+
+📁 Knowledge Base Structure (`knowledge_base/`)
+Company documents are categorized to ensure proper RAG performance:
+- `delivery_policy.txt` — Delivery terms and conditions, tracking number information.
+- `return_policy.txt` — Conditions and rules for returning eligible and defective items.
+- `payment_methods.txt` — Available payment methods (online, cash on delivery).
+- `warranty_policy.txt` — Warranty terms and exchange policy for defective goods.
+- `support_contacts.txt` — Support service contacts and working hours.
+
+⚙️ Using Tools
+Tool 1: Search Knowledge Base
+- Purpose: Answering general questions about store policies.
+- Examples: "What are the return conditions?", "How long does delivery take?".
+
+Tool 2: Get Order Status
+- Purpose: Requesting details for a specific order.
+- Input example: `{"order_id": "A-1042"}`
+- API response example: 
+  ```json
+  {
+    "order_id": "A-1042",
+    "status": "shipped",
+    "tracking_number": "PL123456"
+  }
