@@ -1,1 +1,9 @@
 # Проект использует встроенные библиотеки Python (os, json).
+
+
+
+--------
+
+
+
+The project uses built-in Python libraries (os, json).
