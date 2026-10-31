@@ -6,3 +6,19 @@
 После отправки заказа клиент получает трек-номер, если выбранный способ доставки поддерживает отслеживание.
 
 Если заказ задерживается, клиент может обратиться в службу поддержки.
+
+
+
+-----------
+
+
+
+
+DELIVERY POLICY
+
+Standard delivery takes 2-4 business days.
+Delivery times may increase during holidays.
+
+Once an order is shipped, the customer receives a tracking number, provided that the selected delivery method supports tracking.
+
+If an order is delayed, the customer can contact customer support.
