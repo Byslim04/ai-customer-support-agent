@@ -77,3 +77,92 @@ if name == "main":
     run_support_agent("Сколько занимает доставка?")
     run_support_agent("Где мой заказ A-1042?")
     run_support_agent("Как вернуть товар?")
+
+
+
+
+----------
+
+
+
+
+
+import os
+import json
+
+# ==========================================
+# Tool 1: Search Knowledge Base (RAG Search)
+# ==========================================
+def search_knowledge_base(query: str, kb_folder: str = "knowledge_base") -> str:
+    """Simple search through knowledge base text files (RAG emulation)."""
+    results = []
+    if not os.path.exists(kb_folder):
+        return "Knowledge base is unavailable."
+
+    query_words = query.lower().split()
+    
+    for file_name in os.listdir(kb_folder):
+        if file_name.endswith(".txt"):
+            file_path = os.path.join(kb_folder, file_name)
+            with open(file_path, "r", encoding="utf-8") as f:
+                content = f.read()
+                if any(word in content.lower() for word in query_words):
+                    results.append(f"--- From file {file_name} ---\n{content.strip()}")
+                    
+    if results:
+        return "\n\n".join(results)
+    return "Sorry, there is no information in the knowledge base matching your request."
+
+
+# ==========================================
+# Tool 2: Get Order Status (API/CRM)
+# ==========================================
+MOCK_ORDERS_DB = {
+    "A-1042": {"order_id": "A-1042", "status": "shipped", "tracking_number": "PL123456"},
+    "B-2050": {"order_id": "B-2050", "status": "processing", "tracking_number": None},
+    "C-3099": {"order_id": "C-3099", "status": "delivered", "tracking_number": "PL987654"}
+}
+
+def get_order_status(order_id: str) -> str:
+    """Retrieves order status from CRM by its ID."""
+    order = MOCK_ORDERS_DB.get(order_id.upper())
+    if order:
+        return json.dumps(order, ensure_ascii=False, indent=2)
+    return json.dumps({"error": f"Order {order_id} not found."}, ensure_ascii=False)
+
+
+# ==========================================
+# AI Support Agent Core (Agent Logic)
+# ==========================================
+def run_support_agent(user_message: str):
+    print(f"\n👤 User message: '{user_message}'")
+    
+    words = user_message.lower().split()
+    order_id = None
+    for word in words:
+        clean_word = word.strip("?,.!")
+        if clean_word.upper().startswith("A-") or clean_word.upper().startswith("B-") or clean_word.upper().startswith("C-"):
+            order_id = clean_word.upper()
+            break
+            
+    if order_id:
+        print(f"🤖 [Agent]: Order status request detected. Calling Tool 2 (Get Order Status)...")
+        status_json = get_order_status(order_id)
+        data = json.loads(status_json)
+        
+        if "error" in data:
+            print(f"🤖 [Agent]: {data['error']}")
+        else:
+            print(f"🤖 [Agent]: Order {data['order_id']} has status '{data['status']}'. Tracking number: {data['tracking_number'] or 'not assigned yet'}.")
+        return
+
+    print(f"🤖 [Agent]: Calling Tool 1 (Search Knowledge Base)...")
+    kb_result = search_knowledge_base(user_message)
+    print(f"🤖 [Agent]: Knowledge base response:\n{kb_result}")
+
+
+if __name__ == "__main__":
+    print("=== Starting AI Customer Support Agent ===")
+    run_support_agent("How long does delivery take?")
+    run_support_agent("Where is my order A-1042?")
+    run_support_agent("How do I return an item?")
